@@ -2,6 +2,9 @@ name: Test and Deploy
 
 on:
   pull_request:
+  push:
+    branches:
+      - main
 
 jobs:
   test:
@@ -36,3 +39,27 @@ jobs:
       - run: RAILS_ENV=test bundle exec rails assets:precompile
 
       - run: bundle exec rails test
+
+  deploy:
+    name: Deploy app to AWS
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install SSH key
+        run: |
+          mkdir -p -m 700 ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+
+      - name: Deploy
+        run: |
+          ssh -t webapp@${{ secrets.TARGET_HOSTNAME }} "cd rails-deploy &&
+          git pull origin main &&
+          ~/.rbenv/shims/bundle config --local deployment true &&
+          ~/.rbenv/shims/bundle config --local without development:test &&
+          ~/.rbenv/shims/bundle install &&
+          RAILS_ENV=production ~/.rbenv/shims/bundle exec rails assets:precompile &&
+          RAILS_ENV=production ~/.rbenv/shims/bundle exec rails db:migrate"
