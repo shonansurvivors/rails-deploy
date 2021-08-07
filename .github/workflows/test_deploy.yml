@@ -7,42 +7,42 @@ on:
       - main
 
 jobs:
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.6.8
-
-      - name: Cache bundle
-        uses: actions/cache@v2
-        with:
-          path: vendor/bundle
-          key: bundle-v1-${{ hashFiles('Gemfile.lock') }}
-
-      - name: Run bundle install
-        run: |
-          bundle config --local deployment true
-          bundle config --local without production
-          bundle install
-
-      - name: Cache yarn
-        uses: actions/cache@v2
-        with:
-          path: node_modules
-          key: yarn-v1-${{ hashFiles('yarn.lock') }}
-
-      - run: RAILS_ENV=test bundle exec rails assets:precompile
-
-      - run: bundle exec rails test
+#  test:
+#    name: Test
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - uses: actions/checkout@v2
+#
+#      - uses: ruby/setup-ruby@v1
+#        with:
+#          ruby-version: 2.6.8
+#
+#      - name: Cache bundle
+#        uses: actions/cache@v2
+#        with:
+#          path: vendor/bundle
+#          key: bundle-v1-${{ hashFiles('Gemfile.lock') }}
+#
+#      - name: Run bundle install
+#        run: |
+#          bundle config --local deployment true
+#          bundle config --local without production
+#          bundle install
+#
+#      - name: Cache yarn
+#        uses: actions/cache@v2
+#        with:
+#          path: node_modules
+#          key: yarn-v1-${{ hashFiles('yarn.lock') }}
+#
+#      - run: RAILS_ENV=test bundle exec rails assets:precompile
+#
+#      - run: bundle exec rails test
 
   deploy:
     name: Deploy app to AWS
-    needs: test
+    #needs: test
     #if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
@@ -73,6 +73,6 @@ jobs:
           echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
 
       - name: Capstrano deploy
-        run: bundle exec cap production deploy
+        run: bundle exec cap production deploy --dry-run
         env:
           APP_HOST: ${{ secrets.TARGET_HOSTNAME }}
