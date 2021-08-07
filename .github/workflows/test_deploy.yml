@@ -73,6 +73,6 @@ jobs:
           echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
 
       - name: Capstrano deploy
-        run: bundle exec cap production deploy --dry-run
+        run: bundle exec cap production deploy
         env:
           APP_HOST: ${{ secrets.TARGET_HOSTNAME }}
