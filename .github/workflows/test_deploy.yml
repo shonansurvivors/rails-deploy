@@ -47,20 +47,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v2
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6.8
+
+      - name: Cache bundle
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: bundle-v1-${{ hashFiles('Gemfile.lock') }}
+
+      - name: Run bundle install
+        run: |
+          bundle config --local deployment true
+          bundle config --local without production
+          bundle install
+
       - name: Install SSH key
         run: |
           mkdir -p -m 700 ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/rails-deploy-webapp
+          chmod 600 ~/.ssh/rails-deploy-webapp
           echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
 
-      - name: Deploy
-        run: |
-          ssh -t webapp@${{ secrets.TARGET_HOSTNAME }} "cd rails-deploy &&
-          git pull origin main &&
-          ~/.rbenv/shims/bundle config --local deployment true &&
-          ~/.rbenv/shims/bundle config --local without development:test &&
-          ~/.rbenv/shims/bundle install &&
-          RAILS_ENV=production ~/.rbenv/shims/bundle exec rails assets:precompile &&
-          RAILS_ENV=production ~/.rbenv/shims/bundle exec rails db:migrate &&
-          ~/.rbenv/shims/bundle exec pumactl restart"
+      - name: Capstrano deploy
+        run: bundle exec cap production deploy
+        env:
+          APP_HOST: ${{ secrets.TARGET_HOSTNAME }}
