@@ -72,7 +72,7 @@ jobs:
           chmod 600 ~/.ssh/rails-deploy-webapp
           echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
 
-      - name: Capstrano deploy
+      - name: Capistrano deploy
         run: bundle exec cap production deploy
         env:
           CAP_SERVER: ${{ secrets.TARGET_HOSTNAME }}
