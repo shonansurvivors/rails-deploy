@@ -78,7 +78,6 @@ jobs:
             HostName ${{ secrets.BASTION_HOSTNAME }}
             User webapp
             IdentityFile ~/.ssh/rails-deploy-webapp
-            StrictHostKeyChecking no
 
           Host ${{ secrets.TARGET_HOSTNAME }}
             ProxyJump bastion
