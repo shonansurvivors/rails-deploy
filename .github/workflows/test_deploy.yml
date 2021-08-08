@@ -7,43 +7,43 @@ on:
       - main
 
 jobs:
-#  test:
-#    name: Test
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - uses: actions/checkout@v2
-#
-#      - uses: ruby/setup-ruby@v1
-#        with:
-#          ruby-version: 2.6.8
-#
-#      - name: Cache bundle
-#        uses: actions/cache@v2
-#        with:
-#          path: vendor/bundle
-#          key: bundle-v1-${{ hashFiles('Gemfile.lock') }}
-#
-#      - name: Run bundle install
-#        run: |
-#          bundle config --local deployment true
-#          bundle config --local without production
-#          bundle install
-#
-#      - name: Cache yarn
-#        uses: actions/cache@v2
-#        with:
-#          path: node_modules
-#          key: yarn-v1-${{ hashFiles('yarn.lock') }}
-#
-#      - run: RAILS_ENV=test bundle exec rails assets:precompile
-#
-#      - run: bundle exec rails test
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6.8
+
+      - name: Cache bundle
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: bundle-v1-${{ hashFiles('Gemfile.lock') }}
+
+      - name: Run bundle install
+        run: |
+          bundle config --local deployment true
+          bundle config --local without production
+          bundle install
+
+      - name: Cache yarn
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: yarn-v1-${{ hashFiles('yarn.lock') }}
+
+      - run: RAILS_ENV=test bundle exec rails assets:precompile
+
+      - run: bundle exec rails test
 
   deploy:
     name: Deploy app to AWS
-#    needs: test
-#    if: github.ref == 'refs/heads/main'
+    needs: test
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:
@@ -70,7 +70,7 @@ jobs:
           mkdir -p -m 700 ~/.ssh
           echo "${{ secrets.SSH_KEY }}" > ~/.ssh/rails-deploy-webapp
           chmod 600 ~/.ssh/rails-deploy-webapp
-#          echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
 
       - name: Capistrano deploy
         run: bundle exec cap production deploy
