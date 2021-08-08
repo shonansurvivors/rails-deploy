@@ -72,6 +72,18 @@ jobs:
           chmod 600 ~/.ssh/rails-deploy-webapp
           echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
 
+      - name: Set SSH Config
+        run: |
+          cat << EOF > ~/.ssh/config
+          Host bastion
+            HostName ${{ secrets.BASTION_HOSTNAME }}
+            User webapp
+            IdentityFile ~/.ssh/rails-deploy-webapp
+
+          Host ${{ secrets.TARGET_HOSTNAME }}
+            ProxyJump bastion
+          EOF
+
       - name: Capistrano deploy
         run: bundle exec cap production deploy
         env:
