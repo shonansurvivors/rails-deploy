@@ -211,6 +211,8 @@ Resources:
           #!/bin/bash
           eval "$(ssh-agent)"
 
+          sudo timedatectl set-timezone Asia/Tokyo
+
           sudo yum update -y
 
           sudo amazon-linux-extras install -y nginx1
