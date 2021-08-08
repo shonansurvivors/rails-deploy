@@ -84,7 +84,7 @@ jobs:
             ProxyJump bastion
           EOF
 
-      - name: Capstrano deploy
+      - name: Capistrano deploy
         run: bundle exec cap production deploy
         env:
-          APP_HOST: ${{ secrets.TARGET_HOSTNAME }}
+          CAP_SERVER: ${{ secrets.TARGET_HOSTNAME }}
