@@ -6,6 +6,8 @@
 # server "example.com", user: "deploy", roles: %w{app db web}, my_property: :my_value
 # server "example.com", user: "deploy", roles: %w{app web}, other_property: :other_value
 # server "db.example.com", user: "deploy", roles: %w{db}
+server ENV['CAP_SERVER'], user: "webapp", roles: %w{app db web}
+
 
 # role-based syntax
 # ==================
@@ -39,21 +41,21 @@
 #
 # Global options
 # --------------
-#  set :ssh_options, {
-#    keys: %w(/home/user_name/.ssh/id_rsa),
-#    forward_agent: false,
-#    auth_methods: %w(password)
-#  }
+set :ssh_options, {
+  keys: %w(~/.ssh/rails-deploy-webapp),
+  forward_agent: false,
+  auth_methods: %w(publickey)
+}
 #
 # The server-based syntax can be used to override options:
 # ------------------------------------
-server ENV['APP_HOST'],
-  user: "webapp",
-  roles: %w{app db web},
-  ssh_options: {
-    user: "webapp", # overrides user setting above
-    keys: %w(~/.ssh/rails-deploy-webapp),
-    forward_agent: false,
-    auth_methods: %w(publickey)
-    # password: "please use keys"
-  }
+# server "example.com",
+#   user: "user_name",
+#   roles: %w{web app},
+#   ssh_options: {
+#     user: "user_name", # overrides user setting above
+#     keys: %w(/home/user_name/.ssh/id_rsa),
+#     forward_agent: false,
+#     auth_methods: %w(publickey password)
+#     # password: "please use keys"
+#   }
