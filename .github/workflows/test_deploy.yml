@@ -55,8 +55,8 @@ jobs:
 
       - name: Deploy
         run: |
-          ssh -t webapp@${{ secrets.TARGET_HOSTNAME }} "cd rails-deploy"
-#          ssh -t webapp@${{ secrets.TARGET_HOSTNAME }} "cd rails-deploy &&
+          ssh -o StrictHostKeyChecking=no -t webapp@${{ secrets.TARGET_HOSTNAME }} "cd rails-deploy"
+#          ssh -o StrictHostKeyChecking=no -t webapp@${{ secrets.TARGET_HOSTNAME }} "cd rails-deploy &&
 #          git pull origin main &&
 #          ~/.rbenv/shims/bundle config --local deployment true &&
 #          ~/.rbenv/shims/bundle config --local without development:test &&
