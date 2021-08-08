@@ -130,11 +130,16 @@ Resources:
       RouteTableId: !Ref RouteTableForPublicSubnet
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
-  AssocciateRouteTableForPublicSubnet:
+  AssocciateRouteTableForPublicSubnetA:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       RouteTableId: !Ref RouteTableForPublicSubnet
       SubnetId: !Ref PublicSubnetA
+  AssocciateRouteTableForPublicSubnetC:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref RouteTableForPublicSubnet
+      SubnetId: !Ref PublicSubnetC
   SecurityGroupForVpc:
     Type: AWS::EC2::SecurityGroup
     Properties:
