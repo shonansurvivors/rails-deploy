@@ -75,4 +75,4 @@ jobs:
       - name: Capstrano deploy
         run: bundle exec cap production deploy
         env:
-          APP_HOST: ${{ secrets.TARGET_HOSTNAME }}
+          CAP_SERVER: ${{ secrets.TARGET_HOSTNAME }}
