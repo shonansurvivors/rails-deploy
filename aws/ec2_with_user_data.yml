@@ -130,11 +130,16 @@ Resources:
       RouteTableId: !Ref RouteTableForPublicSubnet
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
-  AssocciateRouteTableForPublicSubnet:
+  AssocciateRouteTableForPublicSubnetA:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       RouteTableId: !Ref RouteTableForPublicSubnet
       SubnetId: !Ref PublicSubnetA
+  AssocciateRouteTableForPublicSubnetC:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref RouteTableForPublicSubnet
+      SubnetId: !Ref PublicSubnetC
   SecurityGroupForVpc:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -206,6 +211,8 @@ Resources:
           #!/bin/bash
           eval "$(ssh-agent)"
 
+          sudo timedatectl set-timezone Asia/Tokyo
+
           sudo yum update -y
 
           sudo amazon-linux-extras install -y nginx1
@@ -257,3 +264,6 @@ Resources:
     Type: AWS::EC2::EIP
     Properties:
       InstanceId: !Ref WebAppServer
+      Tags:
+        - Key: Name
+          Value: !Sub ${AWS::StackName}-webapp
