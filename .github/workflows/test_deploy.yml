@@ -50,13 +50,14 @@ jobs:
       - name: Install SSH key
         run: |
           mkdir -p -m 700 ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/rails-deploy-webapp
+          chmod 600 ~/.ssh/rails-deploy-webapp
 
       - name: Deploy
         run: |
-          ssh -t webapp@${{ secrets.TARGET_HOSTNAME }} "cd rails-deploy &&
+          eval $(ssh-agent)
+          ssh-add ~/.ssh/rails-deploy-webapp
+          ssh -o StrictHostKeyChecking=no -A webapp@${{ secrets.TARGET_HOSTNAME }} "cd rails-deploy &&
           git pull origin main &&
           ~/.rbenv/shims/bundle config --local deployment true &&
           ~/.rbenv/shims/bundle config --local without development:test &&
