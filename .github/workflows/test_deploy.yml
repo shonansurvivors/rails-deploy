@@ -26,7 +26,7 @@ jobs:
 
       - name: Run bundle install
         run: |
-          bundle config --local deployment true
+          bundle config --local path vendor/bundle
           bundle config --local without production
           bundle install
 
