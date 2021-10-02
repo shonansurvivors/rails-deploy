@@ -26,7 +26,7 @@ jobs:
 
       - name: Run bundle install
         run: |
-          bundle config --local deployment true
+          bundle config --local path vendor/bundle
           bundle config --local without production
           bundle install
 
@@ -70,9 +70,8 @@ jobs:
           mkdir -p -m 700 ~/.ssh
           echo "${{ secrets.SSH_KEY }}" > ~/.ssh/rails-deploy-webapp
           chmod 600 ~/.ssh/rails-deploy-webapp
-          echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
 
-      - name: Capstrano deploy
+      - name: Capistrano deploy
         run: bundle exec cap production deploy
         env:
-          APP_HOST: ${{ secrets.TARGET_HOSTNAME }}
+          CAP_SERVER: ${{ secrets.TARGET_HOSTNAME }}
