@@ -26,7 +26,7 @@ jobs:
 
       - name: Run bundle install
         run: |
-          bundle config --local deployment true
+          bundle config --local path vendor/bundle
           bundle config --local without production
           bundle install
 
@@ -61,7 +61,7 @@ jobs:
 
       - name: Run bundle install
         run: |
-          bundle config --local deployment true
+          bundle config --local path vendor/bundle
           bundle config --local without production
           bundle install
 
@@ -72,6 +72,9 @@ jobs:
           chmod 600 ~/.ssh/rails-deploy-webapp
 
       - name: Capistrano deploy
-        run: bundle exec cap production deploy
+        run: |
+          eval $(ssh-agent)
+          ssh-add ~/.ssh/rails-deploy-webapp
+          bundle exec cap production deploy
         env:
           CAP_SERVER: ${{ secrets.TARGET_HOSTNAME }}
