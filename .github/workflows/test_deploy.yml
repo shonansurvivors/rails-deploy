@@ -26,7 +26,7 @@ jobs:
 
       - name: Run bundle install
         run: |
-          bundle config --local deployment true
+          bundle config --local path vendor/bundle
           bundle config --local without production
           bundle install
 
@@ -61,7 +61,7 @@ jobs:
 
       - name: Run bundle install
         run: |
-          bundle config --local deployment true
+          bundle config --local path vendor/bundle
           bundle config --local without production
           bundle install
 
@@ -74,17 +74,18 @@ jobs:
       - name: Set SSH Config
         run: |
           cat << EOF > ~/.ssh/config
-          Host bastion
-            HostName ${{ secrets.BASTION_HOSTNAME }}
-            User webapp
-            IdentityFile ~/.ssh/rails-deploy-webapp
+          Host rails-deploy-bastion
             StrictHostKeyChecking no
+            HostName ${{ secrets.BASTION_HOSTNAME }}
 
-          Host ${{ secrets.TARGET_HOSTNAME }}
-            ProxyJump bastion
+          Host rails-deploy-webapp
+            ProxyJump webapp@rails-deploy-bastion
           EOF
 
       - name: Capistrano deploy
-        run: bundle exec cap production deploy
+        run: |
+          eval $(ssh-agent)
+          ssh-add ~/.ssh/rails-deploy-webapp
+          bundle exec cap production deploy
         env:
-          CAP_SERVER: ${{ secrets.TARGET_HOSTNAME }}
+          CAP_SERVER: rails-deploy-webapp
