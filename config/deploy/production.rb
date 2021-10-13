@@ -43,7 +43,7 @@ server ENV['CAP_SERVER'], user: "webapp", roles: %w{app db web}
 # --------------
 set :ssh_options, {
   keys: %w(~/.ssh/rails-deploy-webapp),
-  forward_agent: false,
+  forward_agent: true,
   auth_methods: %w(publickey)
 }
 #
