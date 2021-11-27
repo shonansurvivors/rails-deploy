@@ -14,9 +14,6 @@
       "./node_modules/@rails/webpacker/package/babel/preset.js"
     ]
   },
-  "browserslist": [
-    "defaults"
-  ],
   "devDependencies": {
     "@webpack-cli/serve": "^1.6.0",
     "webpack-dev-server": "^4.6.0"
