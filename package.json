@@ -1,6 +1,11 @@
 {
   "name": "app",
   "private": true,
+  "engines": {
+    "node": "16.x",
+    "npm": "8.1.x",
+    "yarn": "1.x"
+  },
   "dependencies": {
     "@rails/actioncable": "latest",
     "@rails/activestorage": "latest",
